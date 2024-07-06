@@ -6,5 +6,5 @@ data class Note(
     val title: String,
     val content: String,
     val timestamp: LocalDateTime,
-    val id: Int
+    val id: Int = 0
 )
