@@ -6,6 +6,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +28,7 @@ fun NotesScreen (
     viewModel: NotesViewModel = hiltViewModel(),
     navController: NavController
 ) {
+
     LaunchedEffect(key1 = true) {
         viewModel.navigate.collect { screen ->
             navController.navigate(screen.route)
@@ -64,6 +70,15 @@ fun NotesScreen (
                     }
                 )
             }
+        }
+        IconButton(
+            onClick = {
+                viewModel.onEvent(
+                    NotesScreenEvent.OnAddNoteEvent
+                )
+            }
+        ) {
+            Icon(imageVector = Icons.Default.Create, contentDescription = null)
         }
     }
 }
