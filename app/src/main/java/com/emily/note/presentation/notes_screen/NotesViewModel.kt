@@ -27,6 +27,7 @@ class NotesViewModel @Inject constructor(
         viewModelScope.launch {
             repository.getNotes().collect {
                 _notes.value = it
+                println(_notes.value)
             }
         }
     }

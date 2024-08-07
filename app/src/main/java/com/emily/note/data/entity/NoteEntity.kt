@@ -11,5 +11,5 @@ data class NoteEntity(
     val timestamp: Long,
 
     @PrimaryKey(autoGenerate = true)
-    val id: Int
+    val id: Int?
 )

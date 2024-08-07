@@ -8,15 +8,17 @@ import com.emily.note.core.Constants
 import com.emily.note.core.Screen
 import com.emily.note.domain.model.Note
 import com.emily.note.domain.repository.NoteRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
+@HiltViewModel
 class AddEditNoteViewModel @Inject constructor(
     private val repository: NoteRepository,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val _state = mutableStateOf(AddEditNoteState())
     val state = _state
@@ -24,13 +26,16 @@ class AddEditNoteViewModel @Inject constructor(
     private val _navigate = Channel<Screen>()
     val navigate = _navigate.receiveAsFlow()
 
-    private val id = savedStateHandle.get<Int>("id")!!
+    private val id = savedStateHandle.get<Int>("id")
 
     init {
         viewModelScope.launch {
-            if (id != Constants.NEW_NOTE) {
+            if (id != null && id != Constants.NEW_NOTE) {
                 repository.getNote(id)?.let { note ->
-                    _state.value = state.value.copy(title = note.title, content = note.content)
+                    _state.value = state.value.copy(
+                        title = note.title,
+                        content = note.content
+                    )
                 }
             }
         }
@@ -51,7 +56,7 @@ class AddEditNoteViewModel @Inject constructor(
                             title = _state.value.title,
                             content = _state.value.content,
                             timestamp = LocalDateTime.now(),
-                            id = id
+                            id = if (id == Constants.NEW_NOTE) null else id
                         )
                     )
                     _navigate.send(Screen.Notes)
